@@ -53,6 +53,8 @@ contains
     implicit none
     integer ierror
 
+    call register_kill_signal_handler(handle_sigkill)
+
     call init_mpi
     call define_parm
     call define_decomp(nxp, nyp, nxpart)
@@ -65,6 +67,18 @@ contains
 
     return
   end subroutine driver
+
+  subroutine handle_sigkill
+     use modcross, only : exitcross
+     use ncio, only: close_anal
+     integer :: iret
+
+     print *, "Process interrupted, cleaning up and exiting..."
+     call exitcross()
+     iret = close_anal()
+
+     call exit(0)
+  end subroutine handle_sigkill
 
   !
   ! ----------------------------------------------------------------------
@@ -223,4 +237,3 @@ contains
   end subroutine define_parm
 
 end program ucla_les
-
