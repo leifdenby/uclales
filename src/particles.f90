@@ -2650,7 +2650,8 @@ contains
         if(xstart < 0. .or. xstart > nxg*deltax .or. ystart < 0. .or. ystart > nyg*deltay .or. zstart < 0. .or. zstart > zm(nzp-1)) then
           if (myid == 0) then
             print *, '  ABORTING: particle initialized outsize domain'
-            write (*,*) 'X,Y,Z = ', xstart,ystart,zstart
+            print *, '  domain limits: x=(0,', nxg*deltax, "), y=(0,", nyg*deltay, "), z=(0", zm(nzp-1), ")"
+            write (*,*) '  particle position (x,y,z) = ', xstart,ystart,zstart
           end if
           call appl_abort(0)
         else
