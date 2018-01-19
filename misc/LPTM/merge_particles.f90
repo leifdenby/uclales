@@ -23,7 +23,8 @@ program mergeparticles
   character(8)                      :: procxy
   real, allocatable, dimension(:)   :: var_read
   
-  real                              :: etime,fvalr
+  real                              :: etime
+  real*8                            :: fvalr
   real*4                            :: elapsed(2),fval
   real                              :: total
  
@@ -81,6 +82,7 @@ program mergeparticles
     do j=1,ny
       write(procxy,'(i4.4,i4.4)') i-1,j-1
       path = trim(pref)//".particles."//procxy//".nc"
+      print *, "open ", path
       call check(nf90_open(path,nf90_nowrite,ncid_in))
       call check(nf90_inq_dimid(ncid_in, "particles", varid_in))
       call check(nf90_inquire_dimension(ncid_in, varid_in, varname, npin))
@@ -90,31 +92,33 @@ program mergeparticles
       call check(nf90_inq_varid(ncid_in, trim(var), varid_in))
       
       if(i .eq. 1 .and. j .eq. 1) then
-        ! Put attributes
-	! dimensions
-	call check(nf90_inq_dimid(ncid_in, "time", tid_in))
-	call check(nf90_get_att(ncid_in,tid_in,'longname',lname))
-	call check(nf90_put_att(ncid_out,tid_out,'longname',trim(lname)))
-	call check(nf90_get_att(ncid_in,tid_in,'units',uname))
-        call check(nf90_put_att(ncid_out,tid_out,'units',trim(uname)))
-	call check(nf90_get_att(ncid_in,tid_in,'_FillValue',fvalr))
-	call check(nf90_put_att(ncid_out,tid_out,'_FillValue',fvalr))
-	!call check(nf90_inq_dimid(ncid_in, "particles", pid_in))
-	!call check(nf90_get_att(ncid_in,pid_in,'longname',lname))
-	!call check(nf90_put_att(ncid_out,pid_out,'longname',trim(lname)))
-	!call check(nf90_get_att(ncid_in,pid_in,'units',uname))
-        !call check(nf90_put_att(ncid_out,pid_out,'units',trim(uname)))
-	!call check(nf90_get_att(ncid_in,pid_in,'_FillValue',fvalr))
-	!call check(nf90_put_att(ncid_out,pid_out,'_FillValue',fvalr))
-        ! variable
-	call check(nf90_get_att(ncid_in,varid_in,'longname',lname))
-	call check(nf90_put_att(ncid_out,varid_out,'longname',trim(lname)))
-	call check(nf90_get_att(ncid_in,varid_in,'units',uname))
-        call check(nf90_put_att(ncid_out,varid_out,'units',trim(uname)))
-	call check(nf90_get_att(ncid_in,varid_in,'_FillValue',fval))
-	call check(nf90_put_att(ncid_out,varid_out,'_FillValue',fval))
-        ! Leave define mode
-        call check(nf90_enddef(ncid_out))
+         ! Put attributes
+         ! dimensions
+         call check(nf90_inq_dimid(ncid_in, "time", tid_in))
+         call check(nf90_get_att(ncid_in,tid_in,'longname',lname))
+         call check(nf90_put_att(ncid_out,tid_out,'longname',trim(lname)))
+         call check(nf90_get_att(ncid_in,tid_in,'units',uname))
+         call check(nf90_put_att(ncid_out,tid_out,'units',trim(uname)))
+         call check(nf90_get_att(ncid_in,tid_in,'_FillValue',fvalr))
+         call check(nf90_put_att(ncid_out,tid_out,'_FillValue',fvalr))
+
+         !call check(nf90_inq_dimid(ncid_in, "particles", pid_in))
+         !call check(nf90_get_att(ncid_in,pid_in,'longname',lname))
+         !call check(nf90_put_att(ncid_out,pid_out,'longname',trim(lname)))
+         !call check(nf90_get_att(ncid_in,pid_in,'units',uname))
+         !call check(nf90_put_att(ncid_out,pid_out,'units',trim(uname)))
+         !call check(nf90_get_att(ncid_in,pid_in,'_FillValue',fvalr))
+         !call check(nf90_put_att(ncid_out,pid_out,'_FillValue',fvalr))
+
+         ! variable
+         call check(nf90_get_att(ncid_in,varid_in,'longname',lname))
+         call check(nf90_put_att(ncid_out,varid_out,'longname',trim(lname)))
+         call check(nf90_get_att(ncid_in,varid_in,'units',uname))
+         call check(nf90_put_att(ncid_out,varid_out,'units',trim(uname)))
+         call check(nf90_get_att(ncid_in,varid_in,'_FillValue',fval))
+         call check(nf90_put_att(ncid_out,varid_out,'_FillValue',fval))
+         ! Leave define mode
+         call check(nf90_enddef(ncid_out))
       end if
       
       count  = (/npin,1/)
