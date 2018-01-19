@@ -20,7 +20,10 @@ class Defaults:
     output_filename = "partstartpos"
 
 
-argparser = argparse.ArgumentParser(__doc__)
+argparser = argparse.ArgumentParser(
+    __doc__,
+    formatter_class=argparse.ArgumentDefaultsHelpFormatter
+)
 argparser.add_argument(
     'namelist', type=str,
     help="UCLALES namelist file"
