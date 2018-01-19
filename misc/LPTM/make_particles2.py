@@ -57,9 +57,10 @@ else:
     dy = nml.data.model.deltay
     dz = nml.data.model.deltaz
 
-    nx = nml.data.model.nxp
-    ny = nml.data.model.nyp
-    nz = nml.data.model.nzp
+    # need to exclude ghost cells
+    nx = nml.data.model.nxp - 2
+    ny = nml.data.model.nyp - 2
+    nz = nml.data.model.nzp - 2
 
     if nx != ny or dx != dy:
         raise NotImplementedError("Cannot work with non-uniform xy-grid")
