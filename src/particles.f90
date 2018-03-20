@@ -46,6 +46,7 @@ module modparticles
   logical            :: lpartdumpui    = .false.        !< Switch for writing velocities to dump
   logical            :: lpartdumpth    = .false.        !< Switch for writing temperatures (liquid water / virtual potential T) to dump
   logical            :: lpartdumpmr    = .false.        !< Switch for writing moisture (total / liquid (+rain if level==3) water mixing ratio) to dump
+  logical            :: lpartnorestart = .false.        !< Switch for doing restarts where particles are initiated from rest using text file
   real               :: frqpartdump    =  3600          !< Time interval for particle dump
   integer            :: int_part       =  1             !< Interpolation scheme, 1=linear, 3=3rd order Lagrange
   real               :: ldropstart     = 0.             !< Earliest time to start drops
@@ -2540,11 +2541,7 @@ contains
          call appl_abort(0)
       end if
       open (666,file=hname,status='old',form='unformatted')
-      if (lpartdrop) then
-        read (666,iostat=io) np,tnextdump,npmyid
-      else
-        read (666,iostat=io) np,tnextdump
-      end if
+      read (666,iostat=io) np,tnextdump,npmyid
       do
         read (666,iostat=io) pu,pts,pstp,pnd,px,pxs,pur,purp,py,pys,pvr,pvrp,pz,pzs,pzp,pwr,pwrp,pus,pvs,pws,pusp,pvsp,pwsp,psg2,pm
         if(io .ne. 0) exit
@@ -2848,15 +2845,11 @@ contains
        hname = trim(hname)//'.rst'
     case(2)
        iblank=index(hname,' ')
-       write (hname(iblank:iblank+7),'(a1,i6.6,a1)') '.', int(time), 's'
+       write (hname(iblank:iblank+8),'(a1,i7.7,a1)') '.', int(time), 's'
     end select
 
     open(666,file=trim(hname), form='unformatted')
-    if (lpartdrop) then
-      write(666) np,tnextdump,npmyid
-    else
-      write(666) np,tnextdump
-    end if
+    write(666) np,tnextdump,npmyid
     particle => head
     do while(associated(particle))
       write(666) particle%unique, particle%tstart, particle%partstep, particle%nd, &

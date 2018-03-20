@@ -60,7 +60,9 @@ contains
     use mcrp, only : initmcrp
     use modcross, only : initcross, triggercross
     use grid, only : nzp, dn0, u0, v0, zm, zt, isfctyp
-    use modparticles, only: init_particles, lpartic, lpartdump, lpartstat, initparticledump, initparticlestat, write_particle_hist, particlestat
+    use modparticles, only: init_particles, lpartic, lpartdump, lpartstat, &
+                            initparticledump, initparticlestat, &
+                            write_particle_hist, particlestat, lpartnorestart
 
     implicit none
 
@@ -123,7 +125,12 @@ contains
       if(runtype == 'INITIAL') then
         call init_particles(.false.)
       else
-        call init_particles(.true.,hfilin)
+        if (lpartnorestart) then
+          if (myid == 0) print *,'  Init particles without using particle history files'
+          call init_particles(.false.)
+        else
+          call init_particles(.true.,hfilin)
+        endif
       end if
       if(lpartdump) call initparticledump(time)
       if(lpartstat) call initparticlestat(time)
