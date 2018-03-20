@@ -43,6 +43,8 @@ program mergeparticles
     read (cnx,*) nx
     read (cny,*) ny
   end if
+
+  print *, "Extracting ", trim(var)
   
   ! Loop through files to read number of times/particles 
   do i=1,nx
