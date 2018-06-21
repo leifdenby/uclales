@@ -1,0 +1,4 @@
+build/
+TODO
+src/mpi_interface.f90
+.*.sw*
