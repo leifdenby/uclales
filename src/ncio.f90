@@ -260,7 +260,7 @@ contains
 
     use mpi_interface, only :myid
 
-    integer, parameter :: nnames = 46
+    integer, parameter :: nnames = 47
     character (len=7), save :: sbase(nnames) =  (/ &
          'time   ','zt     ','zm     ','xt     ','xm     ','yt     '   ,& !1
          'ym     ','u0     ','v0     ','dn0    ','u      ','v      '   ,& !7 
@@ -269,7 +269,7 @@ contains
          'ngrp   ','rhail  ','nhail  ','rflx   ','lflxu  ','lflxd  '   ,& !25
          'shf    ','lhf    ','ustars ','a_tskin','a_qskin','tsoil  '   ,& !31
          'phiw   ','a_Qnet ','a_G0   ','mp_tlt ','mp_qt  ','mp_qr  '   ,& !37
-         'mp_qi  ','mp_qs  ','mp_qg  ','mp_qh  '/)  !43-46
+         'mp_qi  ','mp_qs  ','mp_qg  ','mp_qh  ','cvrxp  '/)  !43-47
 
 
 
@@ -285,6 +285,7 @@ contains
     if (iradtyp > 1) nvar0 = nvar0+3
     if (isfctyp == 5) nvar0 = nvar0+9
     if (lmptend)      nvar0 = nvar0+7
+    if (lcouvreux)    nvar0 = nvar0+1
 
     allocate (sanal(nvar0))
     sanal(1:nbase) = sbase(1:nbase)
@@ -376,6 +377,11 @@ contains
        sanal(nvar0) = sbase(45)
        nvar0 = nvar0+1
        sanal(nvar0) = sbase(46)
+    end if
+
+    if (lcouvreux) then
+       nvar0 = nvar0+1
+       sanal(nvar0) = sbase(47)
     end if
 
     nbeg = nvar0+1
@@ -591,6 +597,13 @@ contains
          iret = nf90_put_var(ncid0, VarID, mp_qh(:,i1:i2,j1:j2), start=ibeg, &
               count=icnt)
       end if
+
+      if (lcouvreux) then
+         nn = nn+1
+         iret = nf90_inq_varid(ncid0, sanal(nn), VarID)
+         iret = nf90_put_var(ncid0, VarID, a_cvrxp(:,i1:i2,j1:j2), start=ibeg, &
+              count=icnt)
+      endif
 
 !     if (nn /= nvar0) then
 !        if (myid == 0) print *, 'ABORTING:  Anal write error'
@@ -1530,10 +1543,14 @@ contains
        if (itype==0) ncinfo = 'Surface Net Radiation'
        if (itype==1) ncinfo = 'W/m^2'
        if (itype==2) ncinfo = 'mmt'
-    case('a_G0')    
-       if (itype==0) ncinfo = 'Surface Ground Heat Flux'
-       if (itype==1) ncinfo = 'W/m^2'
+    case('a_g0')
+       if (itype==0) ncinfo = 'surface ground heat flux'
+       if (itype==1) ncinfo = 'w/m^2'
        if (itype==2) ncinfo = 'mmt'
+    case('cvrxp')
+       if (itype==0) ncinfo = 'Couvreux radiactive tracer'
+       if (itype==1) ncinfo = '1'
+       if (itype==2) ncinfo = 'tttt'
     case default
        if (myid==0) print *, 'ABORTING: variable not found in ncinfo, ',trim(short_name)
        call appl_abort(0)
