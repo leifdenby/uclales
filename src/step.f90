@@ -38,7 +38,8 @@ module step
   real    :: cntlat =  31.5 ! 30.0
   logical :: outflg = .true.
   logical :: statflg = .false.
-  real    :: tau = 900.
+  real    :: tau = 900. !> decay rate for first radioactive tracer [s]
+  real    :: tau_extra = 1200. !> decay rate for second radioactive tracer [s]
 !irina
   real    :: sst=292.
   real    :: div = 0.0
@@ -403,7 +404,8 @@ contains
                      a_rhailt,a_nhailt,a_nsnowt, a_ngrt,&
                      a_xt1, a_xt2, nscl, nxyzp, level, &
                      lwaterbudget, a_rct, ncld, &
-                     lcouvreux, a_cvrxt, ncvrx
+                     lcouvreux, a_cvrxt, ncvrx, lcouvreux_extra, &
+                     a_cvrx2t, ncvrx2
     use util, only : azero
 
     integer, intent (in) :: nstep
@@ -422,7 +424,12 @@ contains
           a_npt =>a_xt1(:,:,:,7)
        end if
        if (lwaterbudget) a_rct =>a_xt1(:,:,:,ncld)
-       if (lcouvreux)    a_cvrxt =>a_xt1(:,:,:,ncvrx)
+       if (lcouvreux) then
+          a_cvrxt =>a_xt1(:,:,:,ncvrx)
+          if (lcouvreux_extra) then
+             a_cvrx2t =>a_xt1(:,:,:,ncvrx2)
+          endif
+       endif
        if (level >= 4) then
           a_ricet  =>a_xt1(:,:,:, 8)
           a_nicet  =>a_xt1(:,:,:, 9)
@@ -448,7 +455,12 @@ contains
           a_npt =>a_xt2(:,:,:,7)
        end if
        if (lwaterbudget) a_rct =>a_xt2(:,:,:,ncld)
-       if (lcouvreux)    a_cvrxt =>a_xt2(:,:,:,ncvrx)
+       if (lcouvreux) then
+          a_cvrxt =>a_xt2(:,:,:,ncvrx)
+          if (lcouvreux_extra) then
+             a_cvrx2t =>a_xt2(:,:,:,ncvrx2)
+          endif
+       endif
        if (level >= 4) then
           a_ricet  =>a_xt2(:,:,:, 8)
           a_nicet  =>a_xt2(:,:,:, 9)
@@ -810,9 +822,10 @@ contains
   end subroutine sponge
 
   subroutine decay
-    use grid, only : lcouvreux, a_cvrxp, a_cvrxt, nxp, nyp, nzp, dt
+    use grid, only : lcouvreux, a_cvrxp, a_cvrxt, nxp, nyp, nzp, dt, &
+                     lcouvreux_extra, a_cvrx2p, a_cvrx2t
     integer :: i, j, k
-    real    :: rate
+    real    :: rate, rate2
     if (lcouvreux) then
       rate = 1./(max(tau, dt))
       do j = 3, nyp - 2
@@ -822,6 +835,17 @@ contains
           end do
         end do
       end do
+
+      if (lcouvreux_extra) then
+        rate2 = 1./(max(tau_extra, dt))
+        do j = 3, nyp - 2
+          do i = 3, nxp - 2
+            do k = 2, nzp
+              a_cvrx2t(k,i,j) = a_cvrx2t(k,i,j) - a_cvrx2p(k,i,j) * rate2
+            end do
+          end do
+        end do
+      end if
     end if
 
   end subroutine

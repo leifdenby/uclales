@@ -260,7 +260,7 @@ contains
 
     use mpi_interface, only :myid
 
-    integer, parameter :: nnames = 47
+    integer, parameter :: nnames = 48
     character (len=7), save :: sbase(nnames) =  (/ &
          'time   ','zt     ','zm     ','xt     ','xm     ','yt     '   ,& !1
          'ym     ','u0     ','v0     ','dn0    ','u      ','v      '   ,& !7 
@@ -269,7 +269,7 @@ contains
          'ngrp   ','rhail  ','nhail  ','rflx   ','lflxu  ','lflxd  '   ,& !25
          'shf    ','lhf    ','ustars ','a_tskin','a_qskin','tsoil  '   ,& !31
          'phiw   ','a_Qnet ','a_G0   ','mp_tlt ','mp_qt  ','mp_qr  '   ,& !37
-         'mp_qi  ','mp_qs  ','mp_qg  ','mp_qh  ','cvrxp  '/)  !43-47
+         'mp_qi  ','mp_qs  ','mp_qg  ','mp_qh  ','cvrxp  ','cvrx2p ' /)  !43-48
 
 
 
@@ -286,6 +286,7 @@ contains
     if (isfctyp == 5) nvar0 = nvar0+9
     if (lmptend)      nvar0 = nvar0+7
     if (lcouvreux)    nvar0 = nvar0+1
+    if (lcouvreux_extra)    nvar0 = nvar0+1
 
     allocate (sanal(nvar0))
     sanal(1:nbase) = sbase(1:nbase)
@@ -382,6 +383,11 @@ contains
     if (lcouvreux) then
        nvar0 = nvar0+1
        sanal(nvar0) = sbase(47)
+    end if
+
+    if (lcouvreux_extra) then
+       nvar0 = nvar0+1
+       sanal(nvar0) = sbase(48)
     end if
 
     nbeg = nvar0+1
@@ -602,6 +608,13 @@ contains
          nn = nn+1
          iret = nf90_inq_varid(ncid0, sanal(nn), VarID)
          iret = nf90_put_var(ncid0, VarID, a_cvrxp(:,i1:i2,j1:j2), start=ibeg, &
+              count=icnt)
+      endif
+
+      if (lcouvreux_extra) then
+         nn = nn+1
+         iret = nf90_inq_varid(ncid0, sanal(nn), VarID)
+         iret = nf90_put_var(ncid0, VarID, a_cvrx2p(:,i1:i2,j1:j2), start=ibeg, &
               count=icnt)
       endif
 
@@ -1549,6 +1562,10 @@ contains
        if (itype==2) ncinfo = 'mmt'
     case('cvrxp')
        if (itype==0) ncinfo = 'Couvreux radiactive tracer'
+       if (itype==1) ncinfo = '1'
+       if (itype==2) ncinfo = 'tttt'
+    case('cvrx2p')
+       if (itype==0) ncinfo = 'Second radiactive tracer'
        if (itype==1) ncinfo = '1'
        if (itype==2) ncinfo = 'tttt'
     case default

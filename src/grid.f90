@@ -53,9 +53,11 @@ module grid
   logical           :: lmptend = .false.   ! Write out microphysical 3D fields.
   logical           :: lrad_ca = .false.   ! Perform clear air radiation calculations
   logical           :: lcouvreux = .false.  ! switch for 'radioactive' scalar
+  logical           :: lcouvreux_extra = .false.  ! switch for second 'radioactive' scalar
   logical           :: lwaterbudget = .false.  ! switch for liquid water budget diagnostics
   integer           :: ncvrx               ! Number of Couvreux scalar
-  integer           :: ncld               ! Number of Couvreux scalar
+  integer           :: ncvrx2              ! Tracer number of second Couvreux scalar
+  integer           :: ncld                ! Number of water budget scalar
 
   integer           :: nfpt = 10           ! number of rayleigh friction points
   real              :: distim = 300.0      ! dissipation timescale
@@ -115,7 +117,7 @@ module grid
        a_rgrp,   a_rgrt,    & ! graupel
        a_ngrp,   a_ngrt,    &
        a_rhailp, a_rhailt,  & ! hail
-       a_nhailp, a_nhailt, a_rct, a_cld, a_cvrxp, a_cvrxt
+       a_nhailp, a_nhailt, a_rct, a_cld, a_cvrxp, a_cvrxt, a_cvrx2p, a_cvrx2t
  ! linda,b, output of tendencies
   real, dimension (:,:,:), allocatable :: &
         mp_qt, mp_qr, mp_qi, mp_qs, mp_qg, mp_qh, &
@@ -265,6 +267,11 @@ contains
       ncvrx = nscl
     end if
 
+    if (lcouvreux_extra) then
+      nscl = nscl+1 ! Additional radioactive scalar
+      ncvrx2 = nscl
+    end if
+
     allocate (a_xp(nzp,nxp,nyp,nscl), a_xt1(nzp,nxp,nyp,nscl),        &
          a_xt2(nzp,nxp,nyp,nscl))
 
@@ -330,6 +337,17 @@ contains
       a_cvrxp(:,:,:) = 0.
       allocate (trac_sfc(nxp,nyp))
       trac_sfc = 1.
+      if (lcouvreux_extra) then
+        ! second radioactive traver uses trac_sfc to diffusive from too (see
+        ! sgsm.f90)
+        a_cvrx2p=>a_xp(:,:,:,ncvrx2)
+        a_cvrx2p(:,:,:) = 0.
+      else
+        a_cvrx2p => NULL()
+      end if
+    else if (lcouvreux_extra) then
+      print *, "Can't enable second radioactive tracer without enabling the first"
+      call exit(-1)
     else
       a_cvrxp => NULL()
     end if

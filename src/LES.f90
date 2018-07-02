@@ -81,7 +81,8 @@ contains
     use step, only : timmax, timrsm, istpfl, corflg, outflg, frqanl, frqhis,          &
          frqcross , strtim, radfrq, cntlat,&
          case_name,lsvarflg, sst, div, wctime , tau, &                !irina
-         lanom ! linda
+         lanom, & ! linda
+         tau_extra
     use modnetcdf, only : lsync, deflate_level
     use ncio, only : deflev => deflate_level
     use modcross, only : lcross, lxy,lxz,lyz,xcross,ycross,zcross, crossvars
@@ -89,7 +90,8 @@ contains
     use grid, only : deltaz, deltay, deltax, nzp, nyp, nxp, nxpart,           &
          dtlong, dzrat,dzmax, th00, umean, vmean, naddsc, level,              &
          filprf, expnme, iradtyp, igrdtyp, nfpt, distim, lspongeinit, runtype,             &
-         CCN, lwaterbudget, lcouvreux, prc_lev, isfctyp, sfc_albedo, lrad_ca
+         CCN, lwaterbudget, lcouvreux, prc_lev, isfctyp, sfc_albedo, lrad_ca, &
+         lcouvreux_extra
     use init, only : us, vs, ts, rts, ps, hs, ipsflg, itsflg,irsflg, iseed, hfilin,   &
          zrand,lhomrestart,mag_pert_q,mag_pert_t
     use stat, only : ssam_intvl, savg_intvl
@@ -144,6 +146,7 @@ contains
          lrandommicro, microseq,timenuc ,nin_set,cloud_type, &  !thijs: sequence of variables for microphysics
          lwaterbudget, &                 ! axel: flag for liquid water budget diagnostics (only level=3)
          lcouvreux , tau , &                    ! The Couvreux 'radioactive' scalar
+         lcouvreux_extra, tau_extra, &  ! second "radioactive" tracer
          lrad_ca, &                        ! Clear air radiation statistics
          deflate_level , lhomflx,lhomrestart, &                         !Compression of the crosssections
          clouddiff, &
