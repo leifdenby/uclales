@@ -29,7 +29,7 @@ implicit none
   character(len=7),  dimension(10) :: hname
   character(len=80), dimension(10) :: hlname
   character(len=7) :: hname_prc
-  integer, parameter :: nvar_all = 49
+  integer, parameter :: nvar_all = 50
   character (len=7), dimension(nvar_all)  :: crossvars =  (/ &
          'u      ','v      ','w      ','t      ','r      ', & !1-5
          'l      ','rp     ','np     ','tv     ','ricep  ', & !6-10
@@ -40,7 +40,7 @@ implicit none
          'rwptop ','tracer ','trcpath','trcbase','trctop ', & !31-35
          'wdev_cl','wdev_sc','w_cld  ','tdev_cl','tdev_sc', & !36-40
          't_cld  ','qdev_cl','qdev_sc','q_cld  ','tv_cl  ', & !41-45
-         'tv_sc  ','tv_cld ','core   ','th_e   '/)            !46-49
+         'tv_sc  ','tv_cld ','core   ','th_e   ','trcage '/)  !46-50
   integer :: nccrossxzid,nccrossyzid,nccrossxyid, nccrossrec, nvar
 
   interface writecross
@@ -143,7 +143,7 @@ contains
                             xname, xlongname, xunit, &
                             yname, ylongname, yunit, &
                             tname, tlongname, tunit, &
-                            lwaterbudget, lcouvreux, prc_lev
+                            lwaterbudget, lcouvreux, prc_lev, lcouvreux_extra
 
     character (*), intent(in)     :: name
     character (40), dimension(3) :: dimname, dimlongname, dimunit
@@ -363,6 +363,11 @@ contains
         longname = 'equivalent potential temperature'
         unit = 'K'
         iscross = .true.
+      case ('trcage')
+        if (.not. lcouvreux .or. .not. lcouvreux_extra) return
+        longname = 'time since release of radioactive tracer'
+        unit = 's'
+        iscross = .true.
       case default
         return
       end select
@@ -469,7 +474,8 @@ contains
   subroutine triggercross(rtimee)
     use grid,      only : level,nxp, nyp, nzp, tname, zt, zm, dzi_m, dzi_t, a_up, a_vp, a_wp, a_tp, a_rp, liquid, a_rpp, a_npp, &
        a_ricep, a_nicep, a_rsnowp, a_nsnowp, a_rgrp, a_ngrp, a_rhailp, a_nhailp, &
-       prc_acc, cnd_acc, cev_acc, rev_acc, a_cvrxp, lcouvreux, a_theta, pi0, pi1, a_pexnr, prc_lev, umean, vmean, th00
+       prc_acc, cnd_acc, cev_acc, rev_acc, a_cvrxp, lcouvreux, a_theta, pi0, pi1, a_pexnr, prc_lev, umean, vmean, th00, &
+       lcouvreux_extra, a_cvrx2p
     use modnetcdf, only : writevar_nc, fillvalue_double
     use util,      only : get_avg3, get_var3, calclevel
     use defs,      only : ep2,cp,cpr, p00
@@ -477,7 +483,7 @@ contains
     real, intent(in) :: rtimee
     real             :: tstar, exner, tk
     real, dimension(3:nxp-2,3:nyp-2) :: tmp
-    real, dimension(nzp,nxp,nyp) :: tracer, tv, interp, th_e,p
+    real, dimension(nzp,nxp,nyp) :: tracer, tv, interp, th_e,p, trcage
     real, dimension(nzp)         :: c1, thvar, tvbar, tvenv, tvcld
     integer :: n, nn, i, j, k, ct, cb, zi, lcl
 
@@ -708,6 +714,9 @@ contains
       case ('trcdept')
         call calcdepth(tracer, tmp)
         call writecross(crossname(n), tmp)
+      case ('trcage')
+        call calctrcage(a_cvrxp, a_cvrx2p, trcage)
+        call writecross(crossname(n), trcage)
       case ('w_cld')
         call calcdevmask(a_wp, liquid, tmp)
         call writecross(crossname(n), tmp)
@@ -1098,6 +1107,16 @@ contains
     end do
   end subroutine scalexcess
 
+  !> Calculate time in seconds since release of radioactive tracers
+  subroutine calctrcage(trc1, trc2, trcage)
+    use grid, only : nzp, nxp, nyp, zm, zt, a_wp
+    use util, only : get_avg3, get_var3
+    use step, only : tau, tau_extra
+    real, intent(in), dimension(:,:,:) :: trc1, trc2
+    real, intent(out), dimension(:,:,:)  :: trcage
+
+    trcage = tau*tau_extra/(tau - tau_extra)*log(trc1/trc2)
+  end subroutine calctrcage
 
 end module modcross
 
