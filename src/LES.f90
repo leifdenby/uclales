@@ -85,7 +85,7 @@ contains
          tau_extra
     use modnetcdf, only : lsync, deflate_level
     use ncio, only : deflev => deflate_level
-    use modcross, only : lcross, lxy,lxz,lyz,xcross,ycross,zcross, crossvars
+    use modcross, only : lcross, lxy,lxz,lyz,xcross,ycross,zcross, crossvars, threstracer 
     use forc, only : lstendflg, sfc_albedo
     use grid, only : deltaz, deltay, deltax, nzp, nyp, nxp, nxpart,           &
          dtlong, dzrat,dzmax, th00, umean, vmean, naddsc, level,              &
@@ -147,6 +147,7 @@ contains
          lwaterbudget, &                 ! axel: flag for liquid water budget diagnostics (only level=3)
          lcouvreux , tau , &                    ! The Couvreux 'radioactive' scalar
          lcouvreux_extra, tau_extra, &  ! second "radioactive" tracer
+         threstracer, &  ! number of standard deviations used for cut-off for radioactive tracers
          lrad_ca, &                        ! Clear air radiation statistics
          deflate_level , lhomflx,lhomrestart, &                         !Compression of the crosssections
          clouddiff, &
