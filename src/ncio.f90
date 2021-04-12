@@ -260,7 +260,7 @@ contains
 
     use mpi_interface, only :myid
 
-    integer, parameter :: nnames = 46
+    integer, parameter :: nnames = 51
     character (len=7), save :: sbase(nnames) =  (/ &
          'time   ','zt     ','zm     ','xt     ','xm     ','yt     '   ,& !1
          'ym     ','u0     ','v0     ','dn0    ','u      ','v      '   ,& !7 
@@ -269,7 +269,8 @@ contains
          'ngrp   ','rhail  ','nhail  ','rflx   ','lflxu  ','lflxd  '   ,& !25
          'shf    ','lhf    ','ustars ','a_tskin','a_qskin','tsoil  '   ,& !31
          'phiw   ','a_Qnet ','a_G0   ','mp_tlt ','mp_qt  ','mp_qr  '   ,& !37
-         'mp_qi  ','mp_qs  ','mp_qg  ','mp_qh  '/)  !43-46
+         'mp_qi  ','mp_qs  ','mp_qg  ','mp_qh  ','atrc_xr','atrc_xi'   ,& !43
+         'atrc_yr','atrc_yi','atrc_z '/)  !49-51
 
 
 
@@ -285,6 +286,7 @@ contains
     if (iradtyp > 1) nvar0 = nvar0+3
     if (isfctyp == 5) nvar0 = nvar0+9
     if (lmptend)      nvar0 = nvar0+7
+    if (ladvtrc)      nvar0 = nvar0+5
 
     allocate (sanal(nvar0))
     sanal(1:nbase) = sbase(1:nbase)
@@ -376,6 +378,18 @@ contains
        sanal(nvar0) = sbase(45)
        nvar0 = nvar0+1
        sanal(nvar0) = sbase(46)
+    end if
+    if (ladvtrc) then
+       nvar0 = nvar0+1
+       sanal(nvar0) = sbase(47)
+       nvar0 = nvar0+1
+       sanal(nvar0) = sbase(48)
+       nvar0 = nvar0+1
+       sanal(nvar0) = sbase(49)
+       nvar0 = nvar0+1
+       sanal(nvar0) = sbase(50)
+       nvar0 = nvar0+1
+       sanal(nvar0) = sbase(51)
     end if
 
     nbeg = nvar0+1
@@ -592,10 +606,35 @@ contains
               count=icnt)
       end if
 
-!     if (nn /= nvar0) then
-!        if (myid == 0) print *, 'ABORTING:  Anal write error'
-!        call appl_abort(0)
-!     end if
+    if (ladvtrc)  then
+         nn = nn+1
+         if (myid==0) print*,"sanal(nn):",sanal(nn),nn
+         iret = nf90_inq_varid(ncid0, sanal(nn), VarID)
+         iret = nf90_put_var(ncid0, VarID, a_advtrc_xr(:,i1:i2,j1:j2), start=ibeg, &
+              count=icnt)
+         nn = nn+1
+         if (myid==0) print*,"sanal(nn):",sanal(nn),nn
+         iret = nf90_inq_varid(ncid0, sanal(nn), VarID)
+         iret = nf90_put_var(ncid0, VarID, a_advtrc_xi(:,i1:i2,j1:j2), start=ibeg, &
+              count=icnt)
+         nn = nn+1
+         iret = nf90_inq_varid(ncid0, sanal(nn), VarID)
+         iret = nf90_put_var(ncid0, VarID, a_advtrc_yr(:,i1:i2,j1:j2), start=ibeg, &
+              count=icnt)
+         nn = nn+1
+         iret = nf90_inq_varid(ncid0, sanal(nn), VarID)
+         iret = nf90_put_var(ncid0, VarID, a_advtrc_yi(:,i1:i2,j1:j2), start=ibeg, &
+              count=icnt)
+         nn = nn+1
+         iret = nf90_inq_varid(ncid0, sanal(nn), VarID)
+         iret = nf90_put_var(ncid0, VarID, a_advtrc_z(:,i1:i2,j1:j2), start=ibeg, &
+              count=icnt)
+      end if
+
+     if (nn /= nvar0) then
+        if (myid == 0) print *, 'ABORTING:  Anal write error'
+        call appl_abort(0)
+     end if
 
     if (myid==0) print "(//' ',12('-'),'   Record ',I3,' to: ',A60)",    &
          nrec0,fname
@@ -1534,6 +1573,26 @@ contains
        if (itype==0) ncinfo = 'Surface Ground Heat Flux'
        if (itype==1) ncinfo = 'W/m^2'
        if (itype==2) ncinfo = 'mmt'
+    case('atrc_xr')
+       if (itype==0) ncinfo = 'advected x-position scalar (real part)'
+       if (itype==1) ncinfo = '1'
+       if (itype==2) ncinfo = 'tttt'
+    case('atrc_xi')
+       if (itype==0) ncinfo = 'advected x-position scalar (imaginary part)'
+       if (itype==1) ncinfo = '1'
+       if (itype==2) ncinfo = 'tttt'
+    case('atrc_yr')
+       if (itype==0) ncinfo = 'advected y-position scalar (real part)'
+       if (itype==1) ncinfo = '1'
+       if (itype==2) ncinfo = 'tttt'
+    case('atrc_yi')
+       if (itype==0) ncinfo = 'advected y-position scalar (imaginary part)'
+       if (itype==1) ncinfo = '1'
+       if (itype==2) ncinfo = 'tttt'
+    case('atrc_z')
+       if (itype==0) ncinfo = 'advected z-position scalar'
+       if (itype==1) ncinfo = '1'
+       if (itype==2) ncinfo = 'tttt'
     case default
        if (myid==0) print *, 'ABORTING: variable not found in ncinfo, ',trim(short_name)
        call appl_abort(0)

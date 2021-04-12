@@ -54,8 +54,10 @@ module grid
   logical           :: lrad_ca = .false.   ! Perform clear air radiation calculations
   logical           :: lcouvreux = .false.  ! switch for 'radioactive' scalar
   logical           :: lwaterbudget = .false.  ! switch for liquid water budget diagnostics
+  logical           :: ladvtrc = .false.  ! switch for tracer for advective tracer trajectories
   integer           :: ncvrx               ! Number of Couvreux scalar
-  integer           :: ncld               ! Number of Couvreux scalar
+  integer           :: ncld               ! Number of liquid water budget diagnostics field
+  integer           :: nadvtrc              ! Index of first tracer of advective tracer trajectories
 
   integer           :: nfpt = 10           ! number of rayleigh friction points
   real              :: distim = 300.0      ! dissipation timescale
@@ -115,7 +117,8 @@ module grid
        a_rgrp,   a_rgrt,    & ! graupel
        a_ngrp,   a_ngrt,    &
        a_rhailp, a_rhailt,  & ! hail
-       a_nhailp, a_nhailt, a_rct, a_cld, a_cvrxp, a_cvrxt
+       a_nhailp, a_nhailt, a_rct, a_cld, a_cvrxp, a_cvrxt, &
+       a_advtrc_xr, a_advtrc_xi, a_advtrc_yr, a_advtrc_yi, a_advtrc_z ! tracers for advective trajectories
  ! linda,b, output of tendencies
   real, dimension (:,:,:), allocatable :: &
         mp_qt, mp_qr, mp_qi, mp_qs, mp_qg, mp_qh, &
@@ -264,6 +267,10 @@ contains
       nscl = nscl+1 ! Additional radioactive scalar
       ncvrx = nscl
     end if
+    if (ladvtrc) then
+      nadvtrc = nscl+1 ! index of first advective tracer for trajectories
+      nscl = nscl+5 ! 5 additional scalars for trajectories from advected tracers
+    end if
 
     allocate (a_xp(nzp,nxp,nyp,nscl), a_xt1(nzp,nxp,nyp,nscl),        &
          a_xt2(nzp,nxp,nyp,nscl))
@@ -332,6 +339,25 @@ contains
       trac_sfc = 1.
     else
       a_cvrxp => NULL()
+    end if
+
+    if (ladvtrc) then
+      a_advtrc_xr => a_xp(:,:,:,nadvtrc)
+      a_advtrc_xr(:,:,:) = 0.
+      a_advtrc_xi => a_xp(:,:,:,nadvtrc+1)
+      a_advtrc_xi(:,:,:) = 0.
+      a_advtrc_yr => a_xp(:,:,:,nadvtrc+2)
+      a_advtrc_yr(:,:,:) = 0.
+      a_advtrc_yi => a_xp(:,:,:,nadvtrc+3)
+      a_advtrc_yi(:,:,:) = 0.
+      a_advtrc_z  => a_xp(:,:,:,nadvtrc+4)
+      a_advtrc_z(:,:,:) = 0.
+    else
+      a_advtrc_xr => NULL()
+      a_advtrc_xi => NULL()
+      a_advtrc_yr => NULL()
+      a_advtrc_yi => NULL()
+      a_advtrc_z => NULL()
     end if
 
     allocate (a_ustar(nxp,nyp),a_tstar(nxp,nyp))
