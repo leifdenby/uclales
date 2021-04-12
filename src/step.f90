@@ -74,6 +74,7 @@ contains
     use modparticles, only : lpartic, exit_particles, lpartdump, exitparticledump, &
          lpartstat, exitparticlestat, write_particle_hist, particlestat, &
 	 balanced_particledump,frqpartdump, ldropstart
+    use modadvtraj, only : reinit_advtraj
 
 
     real, parameter    :: peak_cfl = 0.5, peak_peclet = 0.5
@@ -133,6 +134,7 @@ contains
          if(myid==0) print*,'     analysis at time=',time
          call thermo(level)
          call write_anal(time)
+         call reinit_advtraj
        end if
 
        if (crossflg) then

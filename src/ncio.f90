@@ -608,12 +608,10 @@ contains
 
     if (ladvtrc)  then
          nn = nn+1
-         if (myid==0) print*,"sanal(nn):",sanal(nn),nn
          iret = nf90_inq_varid(ncid0, sanal(nn), VarID)
          iret = nf90_put_var(ncid0, VarID, a_advtrc_xr(:,i1:i2,j1:j2), start=ibeg, &
               count=icnt)
          nn = nn+1
-         if (myid==0) print*,"sanal(nn):",sanal(nn),nn
          iret = nf90_inq_varid(ncid0, sanal(nn), VarID)
          iret = nf90_put_var(ncid0, VarID, a_advtrc_xi(:,i1:i2,j1:j2), start=ibeg, &
               count=icnt)
