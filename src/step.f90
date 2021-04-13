@@ -407,7 +407,7 @@ contains
                      lwaterbudget, a_rct, ncld, &
                      lcouvreux, a_cvrxt, ncvrx, &
                      ladvtrc, nadvtrc, a_advtrc_xr, a_advtrc_xi, &
-                     a_advtrc_yr, a_advtrc_yi, a_advtrc_z
+                     a_advtrc_yr, a_advtrc_yi, a_advtrc_zr
     use util, only : azero
 
     integer, intent (in) :: nstep

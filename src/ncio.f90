@@ -270,7 +270,7 @@ contains
          'shf    ','lhf    ','ustars ','a_tskin','a_qskin','tsoil  '   ,& !31
          'phiw   ','a_Qnet ','a_G0   ','mp_tlt ','mp_qt  ','mp_qr  '   ,& !37
          'mp_qi  ','mp_qs  ','mp_qg  ','mp_qh  ','atrc_xr','atrc_xi'   ,& !43
-         'atrc_yr','atrc_yi','atrc_z '/)  !49-51
+         'atrc_yr','atrc_yi','atrc_zr'/)  !49-51
 
 
 
@@ -625,7 +625,7 @@ contains
               count=icnt)
          nn = nn+1
          iret = nf90_inq_varid(ncid0, sanal(nn), VarID)
-         iret = nf90_put_var(ncid0, VarID, a_advtrc_z(:,i1:i2,j1:j2), start=ibeg, &
+         iret = nf90_put_var(ncid0, VarID, a_advtrc_zr(:,i1:i2,j1:j2), start=ibeg, &
               count=icnt)
       end if
 
@@ -1587,7 +1587,7 @@ contains
        if (itype==0) ncinfo = 'advected y-position scalar (imaginary part)'
        if (itype==1) ncinfo = '1'
        if (itype==2) ncinfo = 'tttt'
-    case('atrc_z')
+    case('atrc_zr')
        if (itype==0) ncinfo = 'advected z-position scalar'
        if (itype==1) ncinfo = '1'
        if (itype==2) ncinfo = 'tttt'

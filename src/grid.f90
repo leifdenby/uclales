@@ -118,7 +118,7 @@ module grid
        a_ngrp,   a_ngrt,    &
        a_rhailp, a_rhailt,  & ! hail
        a_nhailp, a_nhailt, a_rct, a_cld, a_cvrxp, a_cvrxt, &
-       a_advtrc_xr, a_advtrc_xi, a_advtrc_yr, a_advtrc_yi, a_advtrc_z ! tracers for advective trajectories
+       a_advtrc_xr, a_advtrc_xi, a_advtrc_yr, a_advtrc_yi, a_advtrc_zr ! tracers for advective trajectories
  ! linda,b, output of tendencies
   real, dimension (:,:,:), allocatable :: &
         mp_qt, mp_qr, mp_qi, mp_qs, mp_qg, mp_qh, &
@@ -350,14 +350,14 @@ contains
       a_advtrc_yr(:,:,:) = 0.
       a_advtrc_yi => a_xp(:,:,:,nadvtrc+3)
       a_advtrc_yi(:,:,:) = 0.
-      a_advtrc_z  => a_xp(:,:,:,nadvtrc+4)
-      a_advtrc_z(:,:,:) = 0.
+      a_advtrc_zr  => a_xp(:,:,:,nadvtrc+4)
+      a_advtrc_zr(:,:,:) = 0.
     else
       a_advtrc_xr => NULL()
       a_advtrc_xi => NULL()
       a_advtrc_yr => NULL()
       a_advtrc_yi => NULL()
-      a_advtrc_z => NULL()
+      a_advtrc_zr => NULL()
     end if
 
     allocate (a_ustar(nxp,nyp),a_tstar(nxp,nyp))

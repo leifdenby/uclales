@@ -30,7 +30,7 @@ module modadvtraj
   !--------------------------------------------------------------------------
   use defs, only          : long, pi
   use grid, only          : a_advtrc_xr, a_advtrc_xi, a_advtrc_yr, a_advtrc_yi, &
-                            a_advtrc_z, ladvtrc
+                            a_advtrc_zr, ladvtrc
   use grid, only          : nxp, nyp, nzp, xt, yt, zt, deltax, deltay
   implicit none
   public :: reinit_advtraj
@@ -66,7 +66,7 @@ contains
             a_advtrc_xi(k,i,j) = sin(2.0 * pi * i_g / nxg)
             a_advtrc_yr(k,i,j) = cos(2.0 * pi * j_g / nyg)
             a_advtrc_yi(k,i,j) = sin(2.0 * pi * j_g / nyg)
-            a_advtrc_z(k,i,j) = k
+            a_advtrc_zr(k,i,j) = k
           end do
         end do
       end do
