@@ -427,13 +427,6 @@ contains
        end if
        if (lwaterbudget) a_rct =>a_xt1(:,:,:,ncld)
        if (lcouvreux)    a_cvrxt =>a_xt1(:,:,:,ncvrx)
-       if (ladvtrc) then
-          a_advtrc_xr => a_xt1(:,:,:,nadvtrc)
-          a_advtrc_xi => a_xt1(:,:,:,nadvtrc+1)
-          a_advtrc_yr => a_xt1(:,:,:,nadvtrc+2)
-          a_advtrc_yi => a_xt1(:,:,:,nadvtrc+3)
-          a_advtrc_z  => a_xt1(:,:,:,nadvtrc+4)
-       end if
        if (level >= 4) then
           a_ricet  =>a_xt1(:,:,:, 8)
           a_nicet  =>a_xt1(:,:,:, 9)
@@ -460,13 +453,6 @@ contains
        end if
        if (lwaterbudget) a_rct =>a_xt2(:,:,:,ncld)
        if (lcouvreux)    a_cvrxt =>a_xt2(:,:,:,ncvrx)
-       if (ladvtrc) then
-          a_advtrc_xr => a_xt2(:,:,:,nadvtrc)
-          a_advtrc_xi => a_xt2(:,:,:,nadvtrc+1)
-          a_advtrc_yr => a_xt2(:,:,:,nadvtrc+2)
-          a_advtrc_yi => a_xt2(:,:,:,nadvtrc+3)
-          a_advtrc_z  => a_xt2(:,:,:,nadvtrc+4)
-       end if
        if (level >= 4) then
           a_ricet  =>a_xt2(:,:,:, 8)
           a_nicet  =>a_xt2(:,:,:, 9)

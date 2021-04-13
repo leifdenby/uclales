@@ -29,10 +29,9 @@ module modadvtraj
   ! module modadvtraj
   !--------------------------------------------------------------------------
   use defs, only          : long, pi
-  use mcrp, only          : lpartdrop                   !< Switch for rain drop like advtraj
   use grid, only          : a_advtrc_xr, a_advtrc_xi, a_advtrc_yr, a_advtrc_yi, &
                             a_advtrc_z, ladvtrc
-  use grid, only          : nxp, nyp, nzp
+  use grid, only          : nxp, nyp, nzp, xt, yt, zt, deltax, deltay
   implicit none
   public :: reinit_advtraj
 
@@ -46,15 +45,27 @@ contains
   !--------------------------------------------------------------------------
   !
   subroutine reinit_advtraj
-    integer :: i, j, k
+    use mpi_interface, only : myid, appl_abort, nxg, nyg, nxprocs, nyprocs
+    ! nxg, nyg are the actual number if grid points in the interior of the domain
+    ! and so they should be used for setting up the position scalars
+
+    integer :: i, j, k, i_g, j_g
+
     if (ladvtrc) then
       do j=1,nyp
         do i=1,nxp
           do k=1,nzp
-            a_advtrc_xr(k,i,j) = cos(2.0 * pi * i / nxp)
-            a_advtrc_xi(k,i,j) = sin(2.0 * pi * i / nxp)
-            a_advtrc_yr(k,i,j) = cos(2.0 * pi * j / nyp)
-            a_advtrc_yi(k,i,j) = sin(2.0 * pi * j / nyp)
+            ! have to calculate the global grid position, each local
+            ! decomposition has an extra of two ghost cells either side
+            ! these indecies will be negative and larger than the number of
+            ! cells in the x/y-direction, but this is ok since the sin/cos
+            ! functions are periodic and will wrap
+            i_g = xt(i) / deltax
+            j_g = yt(j) / deltay
+            a_advtrc_xr(k,i,j) = cos(2.0 * pi * i_g / nxg)
+            a_advtrc_xi(k,i,j) = sin(2.0 * pi * i_g / nxg)
+            a_advtrc_yr(k,i,j) = cos(2.0 * pi * j_g / nyg)
+            a_advtrc_yi(k,i,j) = sin(2.0 * pi * j_g / nyg)
             a_advtrc_z(k,i,j) = k
           end do
         end do
