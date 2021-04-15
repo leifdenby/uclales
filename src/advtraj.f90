@@ -55,13 +55,17 @@ contains
       do j=1,nyp
         do i=1,nxp
           do k=1,nzp
-            ! have to calculate the global grid position, each local
-            ! decomposition has an extra of two ghost cells either side
-            ! these indecies will be negative and larger than the number of
-            ! cells in the x/y-direction, but this is ok since the sin/cos
-            ! functions are periodic and will wrap
-            i_g = xt(i) / deltax
-            j_g = yt(j) / deltay
+            ! have to calculate the global grid position, UCLALES centers the
+            ! grid positions on the origin so we need to offset by half the global
+            ! grid width below to get i in [0, nx-1] (as the advected tracer
+            ! trajectory code assumes)
+
+            ! Although each local decomposition has an extra of two ghost cells 
+            ! either side these indecies will be negative and larger than the
+            ! number of cells in the x/y-direction, but this is ok since the
+            ! sin/cos functions are periodic and will wrap
+            i_g = xt(i) / deltax + nxg / 2
+            j_g = yt(j) / deltay + nyg / 2
             a_advtrc_xr(k,i,j) = cos(2.0 * pi * i_g / nxg)
             a_advtrc_xi(k,i,j) = sin(2.0 * pi * i_g / nxg)
             a_advtrc_yr(k,i,j) = cos(2.0 * pi * j_g / nyg)
