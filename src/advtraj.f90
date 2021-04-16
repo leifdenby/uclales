@@ -64,8 +64,8 @@ contains
             ! either side these indecies will be negative and larger than the
             ! number of cells in the x/y-direction, but this is ok since the
             ! sin/cos functions are periodic and will wrap
-            i_g = xt(i) / deltax + nxg / 2
-            j_g = yt(j) / deltay + nyg / 2
+            i_g = xt(i) / deltax + nxg / 2.0
+            j_g = yt(j) / deltay + nyg / 2.0
             a_advtrc_xr(k,i,j) = cos(2.0 * pi * i_g / nxg)
             a_advtrc_xi(k,i,j) = sin(2.0 * pi * i_g / nxg)
             a_advtrc_yr(k,i,j) = cos(2.0 * pi * j_g / nyg)
