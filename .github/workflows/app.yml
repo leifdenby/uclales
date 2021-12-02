@@ -37,7 +37,7 @@ jobs:
           python=${{ matrix.python-version }}
 
     - name: Compile UCLALES
-        shell: bash -l {0}
-        run: |
-          cmake -DMPI=TRUE .
-          make
+      shell: bash -l {0}
+      run: |
+        cmake -DMPI=TRUE .
+        make
