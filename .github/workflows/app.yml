@@ -38,7 +38,6 @@ jobs:
 
     - name: Build project
       uses: nicledomaS/cmake_build_action@v1.4
+      shell: bash -l {0}
       with:
-        submodule_update: ON
-        run_tests: ON
-        unit_test_build: -Dtest=ON
+        cmake_args: -DMPI=TRUE
