@@ -36,6 +36,9 @@ jobs:
         extra-specs: |
           python=${{ matrix.python-version }}
 
+    - name: Setup tmate session
+      uses: mxschmitt/action-tmate@v2
+
     - name: Compile UCLALES
       shell: bash -l {0}
       run: |
