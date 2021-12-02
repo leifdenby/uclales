@@ -40,6 +40,8 @@ include (${SYST} OPTIONAL)
 #Start the project only after all the variables are set
 project (uclales Fortran)
 
+find_package(netcdf REQUIRED)
+
 # Set MPI on or off. By default it is on.
 set (MPI TRUE CACHE BOOL "Choose to enable MPI or not.")
 if(MPI)
