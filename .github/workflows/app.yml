@@ -38,20 +38,15 @@ jobs:
     - name: Compile UCLALES
       shell: bash -l {0}
       run: |
-        cmake -DMPI=TRUE .
+        mkdir build |
+        cd build |
+        cmake -DMPI=TRUE ..
         make
-
-    - name: List directories
-      shell: bash -l {0}
-      run: |
-        ls -l
-
-    - name: List directories (2)
-      shell: bash -l {0}
-      run: |
-        tree
 
     - name: Run UCLALES
       shell: bash -l {0}
       run: |
-        mpiexec -np 4 uclales
+        cd build |
+        cp .github/workflows/NAMELIST . |
+        ls -l |
+        mpiexec -np 4 ./uclales
