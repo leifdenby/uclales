@@ -40,3 +40,8 @@ jobs:
       run: |
         cmake -DMPI=TRUE .
         make
+
+    - name: Run UCLALES
+      shell: bash -l {0}
+      run: |
+        mpiexec -np 4 uclales
