@@ -21,6 +21,9 @@ fork](https://github.com/leifdenby/uclales) as `v2.0.0`
   cmake configuration for ARCHER
   [0e185ec](https://github.com/leifdenby/uclales/commit/0e185ecb975eba0425c407c23b3f77af5e9dda24)
 
+- Fixes to support newer gfortran compilers (tested with `7.5.0` and `9.3.0`)
+  [\#2](https://github.com/leifdenby/uclales/pull/2)
+
 *maintenance*
 
 - Clean-up CMakeLists.txt to use cmake to detect packages, include MPI wrapper
