@@ -1,0 +1,9 @@
+name: uclales
+channels:
+  - conda-forge
+  - defaults
+dependencies:
+  - mpich
+  - cmake
+  - netcdf-fortran
+  - gfortran_linux-64==9.3.0
