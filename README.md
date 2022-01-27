@@ -2,7 +2,7 @@
 
 [![uclales](https://github.com/leifdenby/uclales/actions/workflows/app.yml/badge.svg)](https://github.com/leifdenby/uclales/actions/workflows/app.yml)
 
-*NOTE* This fork has tagged commit
+> **NOTE**: This fork has tagged commit
 [370af9c](https://github.com/leifdenby/uclales/commit/370af9c9f1ffd244adf8d4ada460e2368538359d)
 was as version `v2.0.0` so that changes since that commit may be recorded. In
 tagging this commit as `v2.0.0` this fork of `UCLA-LES` will be adopting
@@ -11,4 +11,5 @@ first
 commit](https://github.com/uclales/uclales/blame/e690bbe2eb4c6737ccf7243ca02e6b3c375399c4/src/ncio.f90#L55).
 There is no record of changes besides the commit history.
 
-Please see the [changelog](CHANGELOG.md) for changes.
+Please see the [changelog](CHANGELOG.md) for changes and
+[KNOWN-ISSUES.md](KNOWN-ISSUES.MD) for any known unresolved issues.
