@@ -1,0 +1,49 @@
+# This workflow will install Python dependencies, run tests and lint with a single version of Python
+# For more information see: https://help.github.com/actions/language-and-framework-guides/using-python-with-github-actions
+
+name: uclales
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+jobs:
+  build:
+    defaults:
+      run:
+        shell: bash -l {0}
+
+    strategy:
+      matrix:
+        #os: [ubuntu-latest, windows-latest, macOS-latest]
+        os: [ubuntu-latest, macOS-latest]
+
+    runs-on: ${{ matrix.os }}
+
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: install mamba
+      uses: mamba-org/provision-with-micromamba@main
+      with:
+        # runner.os: `Linux`, `Windows`, `macOS`
+        # https://stackoverflow.com/a/57948488/271776
+        environment-file: .github/ci_deps/${{ runner.os }}.yml
+
+    #- name: Setup tmate session
+      #uses: mxschmitt/action-tmate@v3
+
+    - name: Compile UCLALES
+      shell: bash -l {0}
+      run: |
+        cmake -DMPI=TRUE .
+        make
+
+    - name: Run UCLALES
+      shell: bash -l {0}
+      run: |
+        cp .github/workflows/NAMELIST . |
+        ls -l |
+        mpiexec -np 4 ./uclales
