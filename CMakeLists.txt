@@ -54,7 +54,6 @@ if(MPI)
  MESSAGE(STATUS "MPI is Enabled.")
  find_package(MPI REQUIRED)
  add_definitions(${MPI_Fortran_COMPILE_FLAGS})
- include_directories(${MPI_Fortran_INCLUDE_PATH})
 
  set(INCLUDE_DIRS ${INCLUDE_DIRS} ${MPI_Fortran_INCLUDE_DIRS})
  set(MPI_INTERFACE_SOURCEFILE "src/mpi/mpi_interface.f90")
