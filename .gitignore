@@ -9,3 +9,8 @@ bin/CmakeCache.txt
 TODO
 .*.sw*
 bin/NAMELIST
+
+misc/synthesis/reduceps
+misc/synthesis/reducets
+misc/LPTM/merge_particles
+misc/LPTM/particle_start_distplot.png
