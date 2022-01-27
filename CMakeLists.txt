@@ -13,10 +13,10 @@
 # For daily use "cmake .. && make" should suffice to build the code, but a command line could look like:
 # export FC="gfortran" && cmake -D SYST=tornado -D MPI=TRUE -D PROFILER=SCALASCA -D CMAKE_BUILD_TYPE=DEBUG .. && make
 ############################
-set (CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${CMAKE_CURRENT_SOURCE_DIR}/config)
+list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/config)
+list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake/Modules)
 
-INCLUDE(CMakeForceCompiler) #Necessary to change between MPI/parallel/profiler compilers, without having to do a make clean
-cmake_minimum_required (VERSION 2.8.1)
+cmake_minimum_required (VERSION 3.3.0)
 set (CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR})
 
 
@@ -37,27 +37,33 @@ if (NOT SYST)
 endif ()
 include (${SYST} OPTIONAL)
 
-#Start the project only after all the variables are set
+# Start the project only after all the variables are set
 project (uclales Fortran)
+enable_language(Fortran)
+MESSAGE(STATUS "Fortran Compiler " ${CMAKE_Fortran_COMPILER})
 
+## netCDF
+find_package(NetCDF COMPONENTS Fortran REQUIRED)
+set(INCLUDE_DIRS ${netCDF_INCLUDE_DIR})
+
+
+## MPI
 # Set MPI on or off. By default it is on.
 set (MPI TRUE CACHE BOOL "Choose to enable MPI or not.")
 if(MPI)
  MESSAGE(STATUS "MPI is Enabled.")
- FILE(GLOB mpifile "${CMAKE_CURRENT_SOURCE_DIR}/src/mpi/mpi_interface.f90")
+ find_package(MPI REQUIRED)
+ add_definitions(${MPI_Fortran_COMPILE_FLAGS})
+
+ set(INCLUDE_DIRS ${INCLUDE_DIRS} ${MPI_Fortran_INCLUDE_DIRS})
+ set(MPI_INTERFACE_SOURCEFILE "src/mpi/mpi_interface.f90")
 else()
-  MESSAGE(STATUS "MPI is Disabled.")
-  FILE(GLOB mpifile "${CMAKE_CURRENT_SOURCE_DIR}/src/seq/seq_interface.f90")
+ MESSAGE(STATUS "MPI is Disabled.")
+ # load source-file which has dummy subroutines for mpi calls
+ set(MPI_INTERFACE_SOURCEFILE "src/seq/mpi_interface.f90")
 endif()
-execute_process(COMMAND ${CMAKE_COMMAND} -E copy_if_different ${mpifile} ${CMAKE_CURRENT_SOURCE_DIR}/src/mpi_interface.f90)
 
-get_filename_component (Fortran_COMPILER_NAME ${CMAKE_Fortran_COMPILER_ID} NAME)
-
-if (NOT ${Fortran_COMPILER_WRAPPER}  STREQUAL "")
-  CMAKE_FORCE_Fortran_COMPILER(${Fortran_COMPILER_WRAPPER} ${Fortran_COMPILER_NAME})
-endif ()
-MESSAGE(STATUS "Fortran Compiler " ${CMAKE_Fortran_COMPILER})
-
+# Compiler flags
 set(CMAKE_Fortran_FLAGS ${USER_Fortran_FLAGS} )
 set(CMAKE_Fortran_FLAGS_RELEASE ${USER_Fortran_FLAGS_RELEASE} )
 set(CMAKE_Fortran_FLAGS_DEBUG ${USER_Fortran_FLAGS_DEBUG})
@@ -69,19 +75,21 @@ else()
 endif()
 
 
-set(INCLUDE_DIRS ${NETCDF_INCLUDE_DIR})
+FILE(GLOB sourcefiles ${MPI_INTERFACE_SOURCEFILE} "src/*.?90")
+add_executable(${PROJECT_NAME} ${sourcefiles})
+include_directories(${INCLUDE_DIRS})
+target_link_libraries(${PROJECT_NAME} PRIVATE NetCDF::NetCDF_Fortran)
+if(MPI)
+  target_link_libraries(${PROJECT_NAME} PRIVATE MPI::MPI_Fortran)
+endif()
 
-add_subdirectory(src)
 
-
-#####################
-# DOCUMENTATION
-#####################
-add_custom_target(todo ALL)
-ADD_CUSTOM_COMMAND(TARGET todo POST_BUILD
-                  COMMAND echo "UCLALES TODO LIST" > TODO
-                  COMMAND date  >> TODO
-                  COMMAND grep -Rin \\todo  src | sed 's/!.*TODO//I' >>  TODO
-                  WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
-                  )
-
+# For printing out all cmake variables:
+set(PRINT_CMAKE_VARS FALSE)
+if(PRINT_CMAKE_VARS)
+  get_cmake_property(_variableNames VARIABLES)
+  list (SORT _variableNames)
+  foreach (_variableName ${_variableNames})
+      message(STATUS "${_variableName}=${${_variableName}}")
+  endforeach()
+endif()
