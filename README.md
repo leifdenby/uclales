@@ -1,5 +1,7 @@
 # UCLA-LES
 
+[![uclales](https://github.com/leifdenby/uclales/actions/workflows/app.yml/badge.svg)](https://github.com/leifdenby/uclales/actions/workflows/app.yml)
+
 *NOTE* This fork has tagged commit
 [370af9c](https://github.com/leifdenby/uclales/commit/370af9c9f1ffd244adf8d4ada460e2368538359d)
 was as version `v2.0.0` so that changes since that commit may be recorded. In
