@@ -38,4 +38,7 @@
   case_name='rico'
   lsvarflg=.false.
   div=0.00000000
+
+  ! turn on optional features
+  ladvtrc = .true.  ! advected position tracers
  /
