@@ -1,3 +1,4 @@
+name: uclales
 channels:
   - conda-forge
   - defaults
