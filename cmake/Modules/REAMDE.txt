@@ -1,0 +1,3 @@
+FindNetCDF.cmake downloaded from
+https://github.com/geospace-code/nc4fortran/blob/main/cmake/Modules/FindNetCDF.cmake
+- commit f98c8314f01f0a21edba4c21bd4a0dec1cebefb6

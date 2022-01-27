@@ -1,0 +1,16 @@
+.DS_Store
+bin/Makefile
+bin/uclales
+bin/src
+bin/cmake_install.cmake
+build/
+bin/CmakeFiles
+bin/CmakeCache.txt
+TODO
+.*.sw*
+bin/NAMELIST
+
+misc/synthesis/reduceps
+misc/synthesis/reducets
+misc/LPTM/merge_particles
+misc/LPTM/particle_start_distplot.png
