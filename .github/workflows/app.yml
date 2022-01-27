@@ -41,6 +41,16 @@ jobs:
         cmake -DMPI=TRUE .
         make
 
+    - name: List directories
+      shell: bash -l {0}
+      run: |
+        ls -l
+
+    - name: List directories (2)
+      shell: bash -l {0}
+      run: |
+        tree
+
     - name: Run UCLALES
       shell: bash -l {0}
       run: |
