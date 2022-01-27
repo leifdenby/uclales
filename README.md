@@ -11,5 +11,4 @@ first
 commit](https://github.com/uclales/uclales/blame/e690bbe2eb4c6737ccf7243ca02e6b3c375399c4/src/ncio.f90#L55).
 There is no record of changes besides the commit history.
 
-Please see the [changelog](CHANGELOG.md) for changes and
-[KNOWN-ISSUES.md](KNOWN-ISSUES.MD) for any known unresolved issues.
+Please see the [changelog](CHANGELOG.md) for changes.
