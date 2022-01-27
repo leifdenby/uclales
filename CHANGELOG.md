@@ -26,6 +26,10 @@ fork](https://github.com/leifdenby/uclales) as `v2.0.0`
 
 *maintenance*
 
+- Setup continuous integration with Github Actions for automaticaly compilation
+  and run (currently 240 second 2x2 core MPI RICO setup).
+  [\#1](https://github.com/leifdenby/uclales/pull/1)
+
 - Clean-up CMakeLists.txt to use cmake to detect packages, include MPI wrapper
   and source-files in `src/` explicitly
   [\#4](https://github.com/leifdenby/uclales/pull/4)
