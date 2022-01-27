@@ -23,6 +23,10 @@ fork](https://github.com/leifdenby/uclales) as `v2.0.0`
 
 *maintenance*
 
+- Clean-up CMakeLists.txt to use cmake to detect packages, include MPI wrapper
+  and source-files in `src/` explicitly
+  [\#4](https://github.com/leifdenby/uclales/pull/4)
+
 - remove unused namelist variable `dtcross` (correct namelist variable for
   setting cross-section output frequency is `frqcross`)
   [2f85744](https://github.com/leifdenby/uclales/commit/2f85744cb92d333d2151202416811d88afa8c128)
