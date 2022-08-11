@@ -109,7 +109,7 @@ contains
     ncall = 0
     if (.not.exists) then ! Write the header of the file, and ensure we're in data mode
       call date_and_time(date,time)
-      iret = nf90_create(fname,NF90_HDF5,ncid)
+      iret = nf90_create(fname,NF90_NETCDF4,ncid)
       if (iret /= nf90_noerr) call nchandle_error(ncid, iret)
       iret = putatt_nc(ncid, 'title', trim(fname))
       if (iret /= nf90_noerr) call nchandle_error(ncid, iret)

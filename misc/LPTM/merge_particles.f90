@@ -63,7 +63,7 @@ program mergeparticles
   ! Create new NetCDF file
   print*,'creating new NetCDF file' 
   path_out = trim(pref)//".particles."//trim(var)//".nc"
-  call check(nf90_create(path_out,nf90_clobber,ncid_out))
+  call check(nf90_create(path_out,NF90_NETCDF4,ncid_out))
   ! Create dimensions
   call check(nf90_def_dim(ncid_out,'particles',nptot,pdim_out))
   call check(nf90_def_dim(ncid_out,'time',ntime,tdim_out))

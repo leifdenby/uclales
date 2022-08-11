@@ -48,7 +48,7 @@ contains
     ncall = 0
     if (.not.exans) then
        call date_and_time(date)
-       iret = nf90_create(lfname,NF90_SHARE,ncid)
+       iret = nf90_create(lfname,NF90_NETCDF4,ncid)
 
        iret = nf90_put_att(ncid,NF90_GLOBAL,'title',ename)
        iret = nf90_put_att(ncid,NF90_GLOBAL,'history','Created on '//date)
