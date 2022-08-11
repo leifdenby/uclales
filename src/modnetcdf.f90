@@ -79,7 +79,7 @@ contains
   subroutine open_nc(fname, ncid,nrec, rtimee, ldelete)
     use grid,   only : tname
     use netcdf, only : nf90_create, nf90_open, nf90_inquire, nf90_inquire_dimension, &
-                       nf90_inq_varid, nf90_get_var, nf90_put_var, nf90_sync, nf90_hdf5, &
+                       nf90_inq_varid, nf90_get_var, nf90_put_var, nf90_sync, nf90_netcdf4, &
                        nf90_write, nf90_noerr, nf90_inquire_variable, nf90_short
     integer, intent (out)          :: ncid   !< NetCDF file number
     integer, intent (out),optional :: nrec   !< The record number that corresponds to the current simulation time
