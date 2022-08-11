@@ -24,6 +24,9 @@ fork](https://github.com/leifdenby/uclales) as `v2.0.0`
 - Fixes to support newer gfortran compilers (tested with `7.5.0` and `9.3.0`)
   [\#2](https://github.com/leifdenby/uclales/pull/2)
 
+- Ensure all output written by UCLALES is in NetCDF4/HDF5 format (rather than
+  NetCDF3) [\#6](https://github.com/leifdenby/uclales/pull/6)
+
 *maintenance*
 
 - Setup continuous integration with Github Actions for automaticaly compilation
@@ -40,6 +43,11 @@ fork](https://github.com/leifdenby/uclales) as `v2.0.0`
 
 - add makefiles for `reducets` and `reduceps` post-processing fortran programs
   [b9cb6d8](https://github.com/leifdenby/uclales/commit/b9cb6d81e445a451e473c965969f57eaa864ef13)
+
+*changed defaults*
+
+- all output written by UCLALES is now in stored in NetCDF4/HDF5 format (rather
+  than NetCDF3) [\#6](https://github.com/leifdenby/uclales/pull/6)
 
 
 ## [v2.0.0](https://github.com/convml/convml_tt/tree/v2.0.0)
