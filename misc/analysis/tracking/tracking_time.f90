@@ -1765,7 +1765,7 @@ program tracking
   filename = trim(stem)//trim(ivar(nvar)%name)//'.nc'
   write(*,*) 'Reading dimensions'
   call check ( nf90_open (trim(filename), NF90_NOWRITE, finput) )
-  call check ( nf90_create(trim(stem)//'track.nc', NF90_HDF5, fid))
+  call check ( nf90_create(trim(stem)//'track.nc', NF90_NETCDF4, fid))
   if (lthermal) then
      call check ( nf90_put_att(fid, nf90_global, 'Thermal threshold',thermthres))
      call check ( nf90_put_att(fid, nf90_global, 'Thermal Min size',nmincells))

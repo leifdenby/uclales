@@ -217,7 +217,7 @@
 !* Enter define mode
       nm2=trim(stem)//".ts.nc"
       print*,nm2
-      status=nf90_create(nm2, nf90_CLOBBER,ncidw)
+      status=nf90_create(nm2, NF90_NETCDF4,ncidw)
        if (status.ne.nf90_noerr) print*,nf90_strerror(status)
 
 !* Define dimenstions
