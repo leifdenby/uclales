@@ -1,0 +1,51 @@
+{
+  "title": "UCLA-LES with advected position scalars for Lagrangian trajectories",
+  "upload_type": "software",
+  "version": "advtraj-v1.0",
+  "description": "<p>Modifications to the UCLA-LES large-eddy simulation model that add five advected position scalars (horizontal position as periodic cos/sin pairs in x and y, plus height), reinitialised after every 3D analysis output. Trajectories are then reconstructed offline from the saved fields with <a href=\"https://github.com/ParaConUK/advtraj\">advtraj</a>, using the mixed online/offline method of Clark, Denby, Efstathiou, Webb and Nair (JAMES, 2026). Switch on with the namelist option <code>ladvtrc = .true.</code>.</p><p>Based on the <a href=\"https://github.com/leifdenby/uclales\">leifdenby/uclales</a> fork (v2.0.0 plus compiler, CMake and CI fixes) of <a href=\"https://github.com/uclales/uclales\">UCLA-LES</a> (Stevens et al., 2005).</p>",
+  "creators": [
+    {
+      "name": "Denby, Leif",
+      "affiliation": "Danish Meteorological Institute",
+      "orcid": "0000-0002-7611-9222"
+    }
+  ],
+  "contributors": [
+    {
+      "name": "Stevens, Bjorn",
+      "type": "RightsHolder"
+    }
+  ],
+  "license": "GPL-3.0-or-later",
+  "keywords": [
+    "large-eddy simulation",
+    "UCLA-LES",
+    "Lagrangian trajectories",
+    "advtraj",
+    "passive tracers",
+    "Fortran"
+  ],
+  "related_identifiers": [
+    {
+      "identifier": "https://github.com/uclales/uclales",
+      "relation": "isDerivedFrom",
+      "resource_type": "software"
+    },
+    {
+      "identifier": "10.1175/MWR2930.1",
+      "relation": "references",
+      "resource_type": "publication-article"
+    },
+    {
+      "identifier": "10.5281/zenodo.23023955",
+      "relation": "references",
+      "resource_type": "software"
+    }
+  ],
+  "grants": [
+    {
+      "id": "10.13039/501100000270::NE/T003871/1"
+    }
+  ],
+  "notes": "Code availability for Clark, Denby, Efstathiou, Webb and Nair (2026), JAMES, accepted (2026MS006067R)."
+}
