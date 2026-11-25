@@ -60,6 +60,7 @@ contains
     use mcrp, only : initmcrp
     use modcross, only : initcross, triggercross
     use grid, only : nzp, dn0, u0, v0, zm, zt, isfctyp
+    use modadvtraj, only : reinit_advtraj
     use modparticles, only: init_particles, lpartic, lpartdump, lpartstat, &
                             initparticledump, initparticlestat, &
                             write_particle_hist, particlestat
@@ -130,6 +131,8 @@ contains
       if(lpartdump) call initparticledump(time)
       if(lpartstat) call initparticlestat(time)
     end if
+
+    call reinit_advtraj
 
     ! write analysis and history files from restart if appropriate
     !
